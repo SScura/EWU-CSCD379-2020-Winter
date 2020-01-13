@@ -1,24 +1,26 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace SecretSanta.Business.Tests
 {
     [TestClass]
     public class GiftTests
     {
+        const int id = 7;
+        const string firstName = "Sean";
+        const string lastName = "Scura";
+        const string title = "Title";
+        const string description = "Scura";
+        const string url = "www.myurl.com";
+
         [TestMethod]
         public void GiftObject_CanPassValueToProperties_AcceptsValues()
         {
-            int id = 7;
-            string firstName = "Sean";
-            string lastName = "Scura";
-            string title = "Title";
-            string description = "Scura";
-            string url = "www.myurl.com";
-            var gifts = new List<Gift>();
-            var user = new User(id, firstName, lastName, gifts);
-            var gift = new Gift(id, title, description, url, user);
+            List<Gift> gifts = new List<Gift>();
+            User user = new User(id, firstName, lastName, gifts);
+            Gift gift = new Gift(id, title, description, url, user);
 
             Assert.IsNotNull(gift);
             Assert.AreEqual(id, gift.Id);
@@ -32,12 +34,38 @@ namespace SecretSanta.Business.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void GiftObject_NullUser_ThrowsException()
         {
-            int id = 7;
-            string title = "Title";
-            string description = "Scura";
-            string url = "www.myurl.com";
             User user = null!;
             var gift = new Gift(id, title, description, url, user);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        //[DataRow(nameof(Gift.Id), null)]
+        //[DataRow(nameof(Gift.Title), null)]
+        //[DataRow(nameof(Gift.Description), null)]
+        //[DataRow(nameof(Gift.Url), null)]
+        [DataRow(nameof(Gift.User), null)]
+        public void AssignNull_AllProperties_ThrowArgumentException(string propertyName, string value)
+        {
+            SetPropertyOnGift(propertyName, value);
+        }
+
+        private static void SetPropertyOnGift(string propertyName, string value)
+        {
+            List<Gift> gifts = new List<Gift>();
+            User user = new User(id, firstName, lastName, gifts);
+            Gift gift = new Gift(id, title, description, url, user);
+            Type type = gift.GetType();
+
+            var propertyInfo = type.GetProperty(propertyName)!;
+            try
+            {
+                propertyInfo.SetValue(gift, value);
+            }
+            catch (TargetInvocationException exception)
+            {
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception.InnerException!).Throw();
+            }
         }
     }
 }
