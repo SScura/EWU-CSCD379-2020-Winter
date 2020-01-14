@@ -11,8 +11,8 @@ namespace SecretSanta.Business.Tests
         const int id = 7;
         const string firstName = "Sean";
         const string lastName = "Scura";
-        const string title = "Title";
-        const string description = "Scura";
+        const string title = "Title of Gift";
+        const string description = "A gift of some kind";
         const string url = "www.myurl.com";
 
         [TestMethod]
@@ -32,19 +32,11 @@ namespace SecretSanta.Business.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void GiftObject_NullUser_ThrowsException()
-        {
-            User user = null!;
-            var gift = new Gift(id, title, description, url, user);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         [DataRow(nameof(Gift.User), null)]
         [DataRow(nameof(Gift.Title), null)]
         [DataRow(nameof(Gift.Description), null)]
         [DataRow(nameof(Gift.Url), null)]
-        public void AssignNull_AllGiftProperties_ThrowArgumentException(string propertyName, string value)
+        public void AllGiftProperties_AssignNull_ThrowArgumentException(string propertyName, string value)
         {
             SetPropertyOnGift(propertyName, value);
         }
