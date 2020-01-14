@@ -41,7 +41,10 @@ namespace SecretSanta.Business.Tests
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         [DataRow(nameof(Gift.User), null)]
-        public void AssignNull_AllProperties_ThrowArgumentException(string propertyName, string value)
+        [DataRow(nameof(Gift.Title), null)]
+        [DataRow(nameof(Gift.Description), null)]
+        [DataRow(nameof(Gift.Url), null)]
+        public void AssignNull_AllGiftProperties_ThrowArgumentException(string propertyName, string value)
         {
             SetPropertyOnGift(propertyName, value);
         }

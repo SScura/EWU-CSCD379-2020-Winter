@@ -14,8 +14,10 @@ namespace SecretSanta.Business
         }
 
         public int Id { get; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string? FirstName { get => _FirstName; set => _LastName = value ?? throw new ArgumentNullException(nameof(value)); }
+        public string? LastName { get => _LastName; set => _LastName = value ?? throw new ArgumentNullException(nameof(value)); }
         public List<Gift> Gifts { get; }
+        private string? _FirstName;
+        private string? _LastName;
     }
 }
