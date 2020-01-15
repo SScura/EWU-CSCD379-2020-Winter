@@ -8,18 +8,18 @@ namespace SecretSanta.Business.Tests
     [TestClass]
     public class UserTests
     {
-        const int id = 7;
-        const string firstName = "Sean";
-        const string lastName = "Scura";
+        const int Id = 7;
+        const string FirstName = "Sean";
+        const string LastName = "Scura";
 
         [TestMethod]
-        [DataRow(nameof(User.FirstName), firstName)]
-        [DataRow(nameof(User.LastName), lastName)]
-        [DataRow(nameof(User.Id), id)]
+        [DataRow(nameof(User.FirstName), FirstName)]
+        [DataRow(nameof(User.LastName), LastName)]
+        [DataRow(nameof(User.Id), Id)]
         public void UserObject_CanPassValueToProperties_AcceptsValues(string propertyName, object value)
         {
             List<Gift> gifts = new List<Gift>();
-            User user = new User(id, firstName, lastName, gifts);
+            User user = new User(Id, FirstName, LastName, gifts);
 
             Assert.IsNotNull(user);
             Assert.AreEqual(value, GetProperty(propertyName));
@@ -31,7 +31,7 @@ namespace SecretSanta.Business.Tests
         public void UserObject_NullGifts_ThrowsException()
         {
             List<Gift> gifts = null!;
-            User user = new User(id, firstName, lastName, gifts);
+            User user = new User(Id, FirstName, LastName, gifts);
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@ namespace SecretSanta.Business.Tests
         private static void SetPropertyOnUser(string propertyName, string value)
         {
             List<Gift> gifts = new List<Gift>();
-            User user = new User(id, firstName, lastName, gifts);
+            User user = new User(Id, FirstName, LastName, gifts);
             Type type = user.GetType();
 
             var propertyInfo = type.GetProperty(propertyName)!;
@@ -63,7 +63,7 @@ namespace SecretSanta.Business.Tests
         private static object? GetProperty(string propertyName)
         {
             List<Gift> gifts = new List<Gift>();
-            User user = new User(id, firstName, lastName, gifts);
+            User user = new User(Id, FirstName, LastName, gifts);
             Type type = user.GetType();
             object? returnValue = null;
 
