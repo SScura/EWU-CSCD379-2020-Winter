@@ -24,7 +24,7 @@ namespace SecretSanta.Business.Tests
 
             Assert.IsNotNull(gift);
             Assert.AreEqual(id, gift.Id);
-            Assert.AreEqual(title, gift.Title);
+            Assert.AreEqual(title, gift.Title!);
             Assert.AreEqual(description, gift.Description);
             Assert.AreEqual(url, gift.Url);
             Assert.IsNotNull(gift.User);

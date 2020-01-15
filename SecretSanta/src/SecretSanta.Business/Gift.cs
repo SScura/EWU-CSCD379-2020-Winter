@@ -12,11 +12,7 @@ namespace SecretSanta.Business
             Url = url;
             User = user;
         }
-        public int Id
-        { 
-            get; 
-            set; 
-        }
+        public int Id{ get; }
         public string? Title{ get => _Title; set => _Title = value ?? throw new ArgumentNullException(nameof(value));}
         public string? Description { get => _Description; set => _Description = value ?? throw new ArgumentNullException(nameof(value)); }
         public string? Url { get => _Url; set => _Url = value ?? throw new ArgumentNullException(nameof(value));}
@@ -25,6 +21,5 @@ namespace SecretSanta.Business
         private string? _Title;
         private string? _Description;
         private string? _Url;
-        private int _Id;
     }
 }
