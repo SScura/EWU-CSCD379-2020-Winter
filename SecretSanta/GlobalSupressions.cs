@@ -11,4 +11,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>")]
 [assembly: SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
-[assembly: SuppressMessage("Design", "CS8618:Non-nullable field", Justification = "<Pending>")]
+//[assembly: SuppressMessage("Design", "CS8618:Non-nullable field", Justification = "<Pending>")]

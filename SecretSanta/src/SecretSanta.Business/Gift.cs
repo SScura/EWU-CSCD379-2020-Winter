@@ -13,13 +13,13 @@ namespace SecretSanta.Business
             User = user ?? throw new ArgumentNullException(nameof(user));
         }
         public int Id{ get; }
-        public string Title{ get => _Title; set => _Title = value ?? throw new ArgumentNullException(nameof(value));}
-        public string Description { get => _Description; set => _Description = value ?? throw new ArgumentNullException(nameof(value)); }
-        public string Url { get => _Url; set => _Url = value ?? throw new ArgumentNullException(nameof(value));}
-        public User User{get => _User; set => _User = value ?? throw new ArgumentNullException(nameof(value));}
-        private User _User;
-        private string _Title;
-        private string _Description;
-        private string _Url;
+        public string? Title{ get => _Title; set => _Title = value ?? throw new ArgumentNullException(nameof(value));}
+        public string? Description { get => _Description; set => _Description = value ?? throw new ArgumentNullException(nameof(value)); }
+        public string? Url { get => _Url; set => _Url = value ?? throw new ArgumentNullException(nameof(value));}
+        public User? User{get => _User; set => _User = value ?? throw new ArgumentNullException(nameof(value));}
+        private User? _User;
+        private string? _Title;
+        private string? _Description;
+        private string? _Url;
     }
 }
