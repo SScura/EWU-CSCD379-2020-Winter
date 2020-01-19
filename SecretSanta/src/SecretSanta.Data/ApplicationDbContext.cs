@@ -22,14 +22,14 @@ namespace SecretSanta.Data
         public DbSet<User> User { get; set; }
         public DbSet<Group> Group { get; set; }
         public IHttpContextAccessor HttpContextAccessor { get; set; }
-#nullable disable
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GroupInfo>().HasKey(g => new { g.UserId, g.GroupId });
 
             modelBuilder.Entity<GroupInfo>()
                 .HasOne(x => x.User)
-                .WithMany(x => x.GroupInfo)
+                .WithMany(x => x.GroupsInfo)
                 .HasForeignKey(x => x.UserId);
 
             modelBuilder.Entity<GroupInfo>()
@@ -37,7 +37,7 @@ namespace SecretSanta.Data
                 .WithMany(x => x.GroupInfo)
                 .HasForeignKey(x => x.GroupId);
         }
-#nullable enable
+
         public override int SaveChanges()
         {
             AddFingerPrinting();
@@ -76,7 +76,6 @@ namespace SecretSanta.Data
                     fingerPrintEntry.ModifiedBy = HttpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier).Value ?? "";
                 }
             }
-
         }
     }
 }

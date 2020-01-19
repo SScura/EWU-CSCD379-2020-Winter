@@ -10,7 +10,7 @@ namespace SecretSanta.Data
         public User? Santa { get; set; }
 #nullable disable
         public ICollection<Gift> Gifts { get; set; }
-        public ICollection<GroupInfo> GroupInfo { get; set; }
+        public List<GroupInfo> GroupsInfo { get; set; }
 #nullable enable
         private string _FirstName = string.Empty;
         private string _LastName = string.Empty;

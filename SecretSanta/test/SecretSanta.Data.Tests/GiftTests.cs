@@ -1,47 +1,89 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace SecretSanta.Data.Tests
 {
     [TestClass]
-    public class GiftTests  
+    public class GiftTests : TestBase
     {
         [TestMethod]
-        public void Gift_CanBeCreate_AllPropertiesGetSet()
+        public async Task CreateGiftWithUser_ForeignRelationshipExists_Confirmed()
         {
-            // Arrange
-            Gift gift = new Gift(1, "Ring 2", "Amazing way to keep the creepers away", "www.ring.com", new User(1, "Inigo", "Montoya", new List<Gift>()));
+            Gift gift = new Gift
+            {
+                Title = "Car",
+                Description = "Ferrari",
+                Url = "test.me",
+                ModifiedBy = "Inigo",
+                CreatedBy = "Montoya"
+            };
+            User user = new User
+            {
+                FirstName = "Inigo",
+                LastName = "Montoya"
+            };
 
-            // Act
+            using (ApplicationDbContext dbContext = new ApplicationDbContext(Options))
+            {
+                gift.User = user;
+                dbContext.Gifts.Add(gift);
+                await dbContext.SaveChangesAsync();
+            }
 
-            // Assert
-            Assert.AreEqual(1, gift.Id);
-            Assert.AreEqual("Ring 2", gift.Title);
-            Assert.AreEqual("Amazing way to keep the creepers away", gift.Description);
-            Assert.AreEqual("www.ring.com", gift.Url);
-            Assert.IsNotNull(gift.User);
+            using (ApplicationDbContext applicationDbContext = new ApplicationDbContext(Options))
+            {
+                var gifts = await applicationDbContext.Gifts.Include(g => g.User).ToListAsync();
+                Assert.AreEqual(1, gifts.Count);
+                Assert.AreEqual(gift.Title, gifts[0].Title);
+                Assert.AreNotEqual(0, gifts[0].Id);
+            }
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Gift_SetTitleToNull_ThrowsArgumentNullException()
+        [DataRow(nameof(Gift.Title), null)]
+        public void Gift_SetTitleToNull_ThrowsArgumentNullException(string propertyName, string? value)
         {
-            Gift gift = new Gift(1, null!, "Amazing way to keep the creepers away", "www.ring.com", new User(1, "Inigo", "Montoya", new List<Gift>()));
+            {
+                SetPropertyOnGift(propertyName, value);
+            }
+            static void SetPropertyOnGift(string propertyName, string? value)
+            {
+                Gift gift = new Gift
+                {
+                    Id = 1,
+                    Description = "Red Ferrari",
+                };
+                Type type = gift.GetType();
+
+                var propertyInfo = type.GetProperty(propertyName)!;
+                try
+                {
+                    propertyInfo.SetValue(gift, value);
+                }
+                catch (TargetInvocationException exception)
+                {
+                    System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception.InnerException!).Throw();
+                }
+            }         
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Gift_SetDescriptionToNull_ThrowsArgumentNullException()
-        {
-            Gift gift = new Gift(1, "Ring 2", null!, "www.ring.com", new User(1, "Inigo", "Montoya", new List<Gift>()));
-        }
+        //[TestMethod]
+        //[ExpectedException(typeof(ArgumentNullException))]
+        //public void Gift_SetDescriptionToNull_ThrowsArgumentNullException()
+        //{
+        //    Gift gift = new Gift(1, "Ring 2", null!, "www.ring.com", new User(1, "Inigo", "Montoya", new List<Gift>()));
+        //}
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Gift_SetUrlToNull_ThrowsArgumentNullException()
-        {
-            Gift gift = new Gift(1, "Ring 2", "Amazing way to keep the creepers away", null!, new User(1, "Inigo", "Montoya", new List<Gift>()));
-        }
+        //[TestMethod]
+        //[ExpectedException(typeof(ArgumentNullException))]
+        //public void Gift_SetUrlToNull_ThrowsArgumentNullException()
+        //{
+        //    Gift gift = new Gift(1, "Ring 2", "Amazing way to keep the creepers away", null!, new User(1, "Inigo", "Montoya", new List<Gift>()));
+        //}
     }
 }
