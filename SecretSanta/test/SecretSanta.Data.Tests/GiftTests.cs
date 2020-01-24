@@ -12,6 +12,7 @@ namespace SecretSanta.Data.Tests
         [TestMethod]
         public async Task Gift_CanBeSavedToDatabase()
         {
+            //Testing build
             // Arrange
             using (var dbContext = new ApplicationDbContext(Options))
             {
