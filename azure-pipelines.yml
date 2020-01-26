@@ -1,24 +1,13 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
 - Assignment*
 
 pool:
-  vmImage: 'windows-latest'
-
-  jobs:
-    - job: ParallelTesting
-  strategy:
-    parallel: 5
+  vmImage: 'ubuntu-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  
+
 
 steps:
 - task: UseDotNet@2
@@ -33,7 +22,3 @@ steps:
   inputs:
     command: 'test'
     projects: '**/test/**/*.csproj'
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'VSTest'
-    testResultsFiles: '**/TEST-*.xml'
