@@ -3,18 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SecretSanta.Data.Tests
 {
-    public abstract class TestBase
+    public class TestBase
     {
 #nullable disable
         private SqliteConnection SqliteConnection { get; set; }
         protected DbContextOptions<ApplicationDbContext> Options { get; private set; }
 #nullable enable
+
         private static ILoggerFactory GetLoggerFactory()
         {
             IServiceCollection serviceCollection = new ServiceCollection();
@@ -29,7 +27,7 @@ namespace SecretSanta.Data.Tests
         }
 
         [TestInitialize]
-        public void InitializeTests()
+        virtual public void TestInitialize()
         {
             SqliteConnection = new SqliteConnection("DataSource=:memory:");
             SqliteConnection.Open();
@@ -40,14 +38,12 @@ namespace SecretSanta.Data.Tests
                 .EnableSensitiveDataLogging()
                 .Options;
 
-            using (var context = new ApplicationDbContext(Options))
-            {
-                context.Database.EnsureCreated();
-            }
+            using var context = new ApplicationDbContext(Options);
+            context.Database.EnsureCreated();
         }
 
         [TestCleanup]
-        public void TeardownTests()
+        virtual public void TestCleanup()
         {
             SqliteConnection.Close();
         }
