@@ -76,13 +76,13 @@ namespace SecretSanta.Data.Tests
         }
 
         [TestMethod]
-        public async Task Createuser_ShouldSetFingerPrintDataOnUpdate()
+        public async Task CreateUser_ShouldSetFingerPrintDataOnUpdate()
         {
             IHttpContextAccessor httpContextAccessor = Mock.Of<IHttpContextAccessor>(hta =>
-                hta.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == new Claim(ClaimTypes.NameIdentifier, "imontoya"));
+                hta.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == new Claim(ClaimTypes.NameIdentifier, UserSamples.MontoyaUserName));
 
             int? userId;
-            // Arrange
+
             using (var applicationDbContext = new ApplicationDbContext(Options, httpContextAccessor))
             {
                 var user = UserSamples.InigoMontoya;
@@ -108,7 +108,7 @@ namespace SecretSanta.Data.Tests
 
                 await applicationDbContext.SaveChangesAsync();
             }
-            // Assert
+
             using (var applicationDbContext = new ApplicationDbContext(Options, httpContextAccessor))
             {
                 var user = await applicationDbContext.Users.Where(a => a.Id == userId).SingleOrDefaultAsync();
