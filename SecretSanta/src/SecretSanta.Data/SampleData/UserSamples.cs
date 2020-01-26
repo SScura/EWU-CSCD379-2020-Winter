@@ -12,6 +12,6 @@ namespace SecretSanta.Data
         static public User LukeSkywalker => new User(Luke, Skywalker);
         public const string Luke= "Luke";
         public const string Skywalker = "Skywalker";
-        public const string SkywalkerUserName = "lskwyalker";
+        public const string SkywalkerUserName = "lskywalker";
     }
 }

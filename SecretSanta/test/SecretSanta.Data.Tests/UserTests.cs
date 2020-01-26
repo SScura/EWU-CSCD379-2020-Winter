@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SecretSanta.Data.Tests
 {
     [TestClass]
-    public class AuthorTests : TestBase
+    public class userTests : TestBase
     {
         [TestMethod]
         public async Task CreateMultipleUsers_ShouldSaveIntoDatabase()
@@ -76,45 +76,46 @@ namespace SecretSanta.Data.Tests
         }
 
         [TestMethod]
-        public async Task CreateUser_ShouldSetFingerPrintDataOnUpdate()
+        public async Task Createuser_ShouldSetFingerPrintDataOnUpdate()
         {
             IHttpContextAccessor httpContextAccessor = Mock.Of<IHttpContextAccessor>(hta =>
-                hta.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == new Claim(ClaimTypes.NameIdentifier, UserSamples.MontoyaUserName));
+                hta.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == new Claim(ClaimTypes.NameIdentifier, "imontoya"));
 
-            int? userId1 = null;
-            int? userId2 = null;
-            using (var applicationDbContext = new ApplicationDbContext(Options))
+            int? userId;
+            // Arrange
+            using (var applicationDbContext = new ApplicationDbContext(Options, httpContextAccessor))
             {
                 var user = UserSamples.InigoMontoya;
+
                 applicationDbContext.Users.Add(user);
 
                 var user2 = UserSamples.LukeSkywalker;
 
                 applicationDbContext.Users.Add(user2);
 
-                await applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
+                await applicationDbContext.SaveChangesAsync();
 
-                userId1 = user.Id;
-                userId2 = user2.Id;
+                userId = user.Id;
             }
 
             httpContextAccessor = Mock.Of<IHttpContextAccessor>(hta =>
                 hta.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == new Claim(ClaimTypes.NameIdentifier, UserSamples.SkywalkerUserName));
             using (var applicationDbContext = new ApplicationDbContext(Options, httpContextAccessor))
             {
-                var user = await applicationDbContext.Users.Where(a => a.Id == userId1).SingleOrDefaultAsync();
-                user = UserSamples.LukeSkywalker;
+                var user = await applicationDbContext.Users.Where(a => a.Id == userId).SingleOrDefaultAsync();
+                user.FirstName = "Luke";
+                user.LastName = "Skywalker";
 
                 await applicationDbContext.SaveChangesAsync();
             }
-
+            // Assert
             using (var applicationDbContext = new ApplicationDbContext(Options, httpContextAccessor))
             {
-                var user2 = await applicationDbContext.Users.Where(a => a.Id == userId2).SingleOrDefaultAsync();
+                var user = await applicationDbContext.Users.Where(a => a.Id == userId).SingleOrDefaultAsync();
 
-                Assert.IsNotNull(user2);
-                Assert.AreEqual(UserSamples.SkywalkerUserName, user2.CreatedBy);
-                Assert.AreEqual(UserSamples.SkywalkerUserName, user2.ModifiedBy);
+                Assert.IsNotNull(user);
+                Assert.AreEqual(UserSamples.MontoyaUserName, user.CreatedBy);
+                Assert.AreEqual(UserSamples.SkywalkerUserName, user.ModifiedBy);
             }
         }
     }
