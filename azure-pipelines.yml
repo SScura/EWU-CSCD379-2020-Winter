@@ -9,9 +9,14 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+  jobs:
+    - job: ParallelTesting
+  strategy:
+    parallel: 5
+
 variables:
   buildConfiguration: 'Release'
-
+  
 
 steps:
 - task: UseDotNet@2
