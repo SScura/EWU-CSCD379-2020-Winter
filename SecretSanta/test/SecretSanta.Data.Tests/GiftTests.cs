@@ -51,12 +51,89 @@ namespace SecretSanta.Data.Tests
                 Assert.AreNotEqual(0, gifts[0].User.Id);
             }
         }
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Gift_SetTitleToNull_ThrowsArgumentNullException()
         {
             {
                 _ = new Gift(null!, "", "", UserSamples.InigoMontoya);
+            }
+        }
+
+        [TestMethod]
+        public async Task CreateGift_UpdateTitle_TitleIsUpdatedInDb()
+        {
+            string updatedTitle = "New Title";
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                dbContext.Gifts.Add(GiftSamples.Motorcycle);
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+
+            }
+
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                var gift = await dbContext.Gifts.Include(g => g.User).SingleOrDefaultAsync();
+                Assert.AreEqual(GiftSamples.Motorcycle.Title, gift.Title);
+                Assert.AreEqual(GiftSamples.Motorcycle.Description, gift.Description);
+                Assert.AreEqual(GiftSamples.Motorcycle.Url, gift.Url);
+                gift.Title = updatedTitle;
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
+
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                var gift = await dbContext.Gifts.Include(g => g.User).SingleOrDefaultAsync();
+                Assert.AreEqual(updatedTitle, gift.Title);
+            }
+        }
+        [TestMethod]
+        public async Task CreateGift_UpdateDescription_TitleIsUpdatedInDb()
+        {
+                            string updatedDescription = "New Description";
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                dbContext.Gifts.Add(GiftSamples.Motorcycle);
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+
+            }
+
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                var gift = await dbContext.Gifts.Include(g => g.User).SingleOrDefaultAsync();
+                Assert.AreEqual(GiftSamples.Motorcycle.Title, gift.Title);
+                Assert.AreEqual(GiftSamples.Motorcycle.Description, gift.Description);
+                Assert.AreEqual(GiftSamples.Motorcycle.Url, gift.Url);
+                gift.Description = updatedDescription;
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
+
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                var gift = await dbContext.Gifts.Include(g => g.User).SingleOrDefaultAsync();
+                Assert.AreEqual(updatedDescription, gift.Description);
+            }
+        }
+
+        [TestMethod]
+        public async Task CreateGift_DeleteGift_GiftRemovedFromDb()
+        {
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                dbContext.Gifts.Add(GiftSamples.Car);
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                var gift = await dbContext.Gifts.SingleOrDefaultAsync();
+                dbContext.Gifts.Remove(gift);
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                var gifts = await dbContext.Gifts.ToListAsync();
+                Assert.AreEqual(0, gifts.Count);
             }
         }
 
@@ -76,5 +153,7 @@ namespace SecretSanta.Data.Tests
                 _ = new Gift("", "", null!, UserSamples.InigoMontoya);
             }
         }
+
     }
+
 }

@@ -193,6 +193,27 @@ namespace SecretSanta.Data.Tests
         }
 
         [TestMethod]
+        public async Task CreateUser_DeleteUser_UserRemovedFromDb()
+        {
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                dbContext.Users.Add(UserSamples.InigoMontoya);
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                var user = await dbContext.Users.SingleOrDefaultAsync();
+                dbContext.Users.Remove(user);
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
+            using (var dbContext = new ApplicationDbContext(Options))
+            {
+                var users = await dbContext.Users.ToListAsync();
+                Assert.AreEqual(0, users.Count);
+            }
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void User_SetFirstNameToNull_ThrowsArgumentNullException()
         {
