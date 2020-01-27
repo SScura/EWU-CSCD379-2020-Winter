@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SecretSanta.Data.Tests
@@ -13,20 +10,18 @@ namespace SecretSanta.Data.Tests
         [TestMethod]
         public async Task Group_CanBeSavedToDatabase()
         {
-            // Arrange
             using (var dbContext = new ApplicationDbContext(Options))
             {
-                dbContext.Groups.Add(new Group(title: "Enchanted Forest"));
+                dbContext.Groups.Add(GroupSamples.Group1);
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
             }
-            // Act
-            // Assert
+
             using (var dbContext = new ApplicationDbContext(Options))
             {
                 var groups = await dbContext.Groups.ToListAsync();
 
                 Assert.AreEqual(1, groups.Count);
-                Assert.AreEqual("Enchanted Forest", groups[0].Title);
+                Assert.AreEqual(GroupSamples.Group1.Title, groups[0].Title);
             }
         }
     }

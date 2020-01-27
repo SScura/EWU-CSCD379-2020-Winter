@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SecretSanta.Data
+﻿namespace SecretSanta.Data
 {
     public static class UserSamples
     {

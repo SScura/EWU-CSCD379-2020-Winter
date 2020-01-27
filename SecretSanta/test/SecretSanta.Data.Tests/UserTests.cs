@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,8 +10,32 @@ using System.Threading.Tasks;
 namespace SecretSanta.Data.Tests
 {
     [TestClass]
-    public class userTests : TestBase
+    public class UserTests : TestBase
     {
+        [TestMethod]
+        public async Task CreateSingleUser_ShouldSaveIntoDatabase()
+        {
+            int? userId1 = null;
+            using (var applicationDbContext = new ApplicationDbContext(Options))
+            {
+                var user = UserSamples.InigoMontoya;
+                applicationDbContext.Users.Add(user);
+
+                await applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
+
+                userId1 = user.Id;
+            }
+
+            using (var applicationDbContext = new ApplicationDbContext(Options))
+            {
+                User user1 =
+                    await applicationDbContext.Users.Where(a => a.Id == userId1).SingleOrDefaultAsync();
+
+                Assert.IsNotNull(user1);
+                Assert.AreEqual(UserSamples.Inigo, user1.FirstName);
+                Assert.AreEqual(UserSamples.Montoya, user1.LastName);
+            }
+        }
         [TestMethod]
         public async Task CreateMultipleUsers_ShouldSaveIntoDatabase()
         {
@@ -50,7 +75,7 @@ namespace SecretSanta.Data.Tests
         }
 
         [TestMethod]
-        public async Task CreateUser_ShouldSetFingerPrintDataOnInitialSave()
+        public async Task CreateSingleUser_ShouldSetFingerPrintDataOnInitialSave()
         {
             IHttpContextAccessor httpContextAccessor = Mock.Of<IHttpContextAccessor>(hta =>
                 hta.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == new Claim(ClaimTypes.NameIdentifier, UserSamples.MontoyaUserName));
@@ -76,7 +101,7 @@ namespace SecretSanta.Data.Tests
         }
 
         [TestMethod]
-        public async Task CreateUser_ShouldSetFingerPrintDataOnUpdate()
+        public async Task CreateUser_UpdateUser_ShouldSetFingerPrintDataOnUpdate()
         {
             IHttpContextAccessor httpContextAccessor = Mock.Of<IHttpContextAccessor>(hta =>
                 hta.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == new Claim(ClaimTypes.NameIdentifier, UserSamples.MontoyaUserName));
@@ -117,6 +142,68 @@ namespace SecretSanta.Data.Tests
                 Assert.AreEqual(UserSamples.MontoyaUserName, user.CreatedBy);
                 Assert.AreEqual(UserSamples.SkywalkerUserName, user.ModifiedBy);
             }
+        }
+        [TestMethod]
+        public async Task User_CanHaveMultipleGifts()
+        {
+            IHttpContextAccessor httpContextAccessor = Mock.Of<IHttpContextAccessor>(hta =>
+                hta.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == new Claim(ClaimTypes.NameIdentifier, UserSamples.MontoyaUserName));
+
+            using (var dbContext = new ApplicationDbContext(Options, httpContextAccessor))
+            {
+                var gift1 = GiftSamples.Motorcycle;
+                var gift2 = GiftSamples.Car;
+                var user = UserSamples.InigoMontoya;
+                user.Gifts.Add(gift1);
+                user.Gifts.Add(gift2);
+                dbContext.Users.Add(user);
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
+            using (var dbContext = new ApplicationDbContext(Options, httpContextAccessor))
+            {
+                var users = await dbContext.Users.Include(u => u.Gifts).ToListAsync();
+
+                Assert.AreEqual(1, users.Count);
+                Assert.AreEqual(2, users[0].Gifts.Count);
+            }
+        }
+        [TestMethod]
+        public async Task User_CanBeJoinedToGroup()
+        {
+            IHttpContextAccessor httpContextAccessor = Mock.Of<IHttpContextAccessor>(hta =>
+            hta.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == new Claim(ClaimTypes.NameIdentifier, UserSamples.MontoyaUserName));
+
+            using (var dbContext = new ApplicationDbContext(Options, httpContextAccessor))
+            {
+                var group = GroupSamples.Group1;
+                var user = UserSamples.InigoMontoya;
+                user.UserGroups.Add(new UserGroup { User = user, Group = group });
+                dbContext.Users.Add(user);
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
+
+            using (var dbContext = new ApplicationDbContext(Options, httpContextAccessor))
+            {
+                var users = await dbContext.Users.Include(u => u.UserGroups).ThenInclude(ug => ug.Group).ToListAsync();
+
+                Assert.AreEqual(1, users.Count);
+                Assert.AreEqual(1, users[0].UserGroups.Count);
+                Assert.AreEqual(GroupSamples.Group1.Title, users[0].UserGroups[0].Group.Title);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void User_SetFirstNameToNull_ThrowsArgumentNullException()
+        {
+            _ = new User(null!, UserSamples.Montoya);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void User_SetLastNameToNull_ThrowsArgumentNullException()
+        {
+            _ = new User(UserSamples.Inigo, null!);
         }
     }
 }
