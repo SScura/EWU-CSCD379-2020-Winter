@@ -2,7 +2,7 @@
 {
     public static class GiftSamples
     {
-        public static  Gift CreateCar() => new Gift(
+        public static Gift CreateCar() => new Gift(
             "Ferrari",
             "This gift cost way too much.",
             ".redferrari.",

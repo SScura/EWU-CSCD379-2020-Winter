@@ -8,7 +8,7 @@
         public const string MontoyaUserName = "imontoya";
 
         static public User CreateLukeSkywalker() => new User(Luke, Skywalker);
-        public const string Luke= "Luke";
+        public const string Luke = "Luke";
         public const string Skywalker = "Skywalker";
         public const string SkywalkerUserName = "lskywalker";
     }

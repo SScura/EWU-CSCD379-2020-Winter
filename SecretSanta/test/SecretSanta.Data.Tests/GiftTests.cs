@@ -91,7 +91,7 @@ namespace SecretSanta.Data.Tests
         [TestMethod]
         public async Task CreateGift_UpdateDescription_TitleIsUpdatedInDb()
         {
-                            string updatedDescription = "New Description";
+            string updatedDescription = "New Description";
             using (var dbContext = new ApplicationDbContext(Options))
             {
                 dbContext.Gifts.Add(GiftSamples.CreateMotorcycle());
@@ -155,5 +155,4 @@ namespace SecretSanta.Data.Tests
         }
 
     }
-
 }

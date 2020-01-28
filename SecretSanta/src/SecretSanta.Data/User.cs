@@ -8,7 +8,7 @@ namespace SecretSanta.Data
         public User(string firstName, string lastName)
         {
             FirstName = firstName;
-            LastName = lastName;         
+            LastName = lastName;
         }
 
         public string FirstName { get => _FirstName; set => _FirstName = value ?? throw new ArgumentNullException(nameof(FirstName)); }
