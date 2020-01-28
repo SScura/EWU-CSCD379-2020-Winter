@@ -13,7 +13,7 @@ namespace SecretSanta.Data.Tests
         {
             using (var dbContext = new ApplicationDbContext(Options))
             {
-                dbContext.Gifts.Add(GiftSamples.Motorcycle);
+                dbContext.Gifts.Add(GiftSamples.CreateMotorcycle());
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
             }
 
@@ -22,16 +22,16 @@ namespace SecretSanta.Data.Tests
                 var gifts = await dbContext.Gifts.ToListAsync();
 
                 Assert.AreEqual(1, gifts.Count);
-                Assert.AreEqual(GiftSamples.Motorcycle.Title, gifts[0].Title);
-                Assert.AreEqual(GiftSamples.Motorcycle.Url, gifts[0].Url);
-                Assert.AreEqual(GiftSamples.Motorcycle.Description, gifts[0].Description);
+                Assert.AreEqual(GiftSamples.CreateMotorcycle().Title, gifts[0].Title);
+                Assert.AreEqual(GiftSamples.CreateMotorcycle().Url, gifts[0].Url);
+                Assert.AreEqual(GiftSamples.CreateMotorcycle().Description, gifts[0].Description);
             }
         }
         [TestMethod]
         public async Task CreateUser_AddGift_ShouldCreateForeignRelationship()
         {
-            var user = UserSamples.InigoMontoya;
-            var gift = GiftSamples.Motorcycle;
+            var user = UserSamples.CreateInigoMontoya();
+            var gift = GiftSamples.CreateMotorcycle();
             gift.Url = ".hd.";
             using (ApplicationDbContext dbContext = new ApplicationDbContext(Options))
             {
@@ -57,7 +57,7 @@ namespace SecretSanta.Data.Tests
         public void Gift_SetTitleToNull_ThrowsArgumentNullException()
         {
             {
-                _ = new Gift(null!, "", "", UserSamples.InigoMontoya);
+                _ = new Gift(null!, "", "", UserSamples.CreateInigoMontoya());
             }
         }
 
@@ -67,7 +67,7 @@ namespace SecretSanta.Data.Tests
             string updatedTitle = "New Title";
             using (var dbContext = new ApplicationDbContext(Options))
             {
-                dbContext.Gifts.Add(GiftSamples.Motorcycle);
+                dbContext.Gifts.Add(GiftSamples.CreateMotorcycle());
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
             }
@@ -75,9 +75,9 @@ namespace SecretSanta.Data.Tests
             using (var dbContext = new ApplicationDbContext(Options))
             {
                 var gift = await dbContext.Gifts.Include(g => g.User).SingleOrDefaultAsync();
-                Assert.AreEqual(GiftSamples.Motorcycle.Title, gift.Title);
-                Assert.AreEqual(GiftSamples.Motorcycle.Description, gift.Description);
-                Assert.AreEqual(GiftSamples.Motorcycle.Url, gift.Url);
+                Assert.AreEqual(GiftSamples.CreateMotorcycle().Title, gift.Title);
+                Assert.AreEqual(GiftSamples.CreateMotorcycle().Description, gift.Description);
+                Assert.AreEqual(GiftSamples.CreateMotorcycle().Url, gift.Url);
                 gift.Title = updatedTitle;
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
             }
@@ -94,7 +94,7 @@ namespace SecretSanta.Data.Tests
                             string updatedDescription = "New Description";
             using (var dbContext = new ApplicationDbContext(Options))
             {
-                dbContext.Gifts.Add(GiftSamples.Motorcycle);
+                dbContext.Gifts.Add(GiftSamples.CreateMotorcycle());
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
             }
@@ -102,9 +102,9 @@ namespace SecretSanta.Data.Tests
             using (var dbContext = new ApplicationDbContext(Options))
             {
                 var gift = await dbContext.Gifts.Include(g => g.User).SingleOrDefaultAsync();
-                Assert.AreEqual(GiftSamples.Motorcycle.Title, gift.Title);
-                Assert.AreEqual(GiftSamples.Motorcycle.Description, gift.Description);
-                Assert.AreEqual(GiftSamples.Motorcycle.Url, gift.Url);
+                Assert.AreEqual(GiftSamples.CreateMotorcycle().Title, gift.Title);
+                Assert.AreEqual(GiftSamples.CreateMotorcycle().Description, gift.Description);
+                Assert.AreEqual(GiftSamples.CreateMotorcycle().Url, gift.Url);
                 gift.Description = updatedDescription;
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
             }
@@ -121,7 +121,7 @@ namespace SecretSanta.Data.Tests
         {
             using (var dbContext = new ApplicationDbContext(Options))
             {
-                dbContext.Gifts.Add(GiftSamples.Car);
+                dbContext.Gifts.Add(GiftSamples.CreateCar());
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
             }
             using (var dbContext = new ApplicationDbContext(Options))
@@ -142,7 +142,7 @@ namespace SecretSanta.Data.Tests
         public void Gift_SetDescriptionToNull_ThrowsArgumentNullException()
         {
 
-            _ = new Gift("", null!, "", UserSamples.InigoMontoya);
+            _ = new Gift("", null!, "", UserSamples.CreateInigoMontoya());
         }
 
         [TestMethod]
@@ -150,7 +150,7 @@ namespace SecretSanta.Data.Tests
         public void Gift_SetUrlToNull_ThrowsArgumentNullException()
         {
             {
-                _ = new Gift("", "", null!, UserSamples.InigoMontoya);
+                _ = new Gift("", "", null!, UserSamples.CreateInigoMontoya());
             }
         }
 

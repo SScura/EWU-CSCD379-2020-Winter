@@ -2,17 +2,17 @@
 {
     public static class GiftSamples
     {
-        public static  Gift Car => new Gift(
+        public static  Gift CreateCar() => new Gift(
             "Ferrari",
             "This gift cost way too much.",
             ".redferrari.",
-            UserSamples.InigoMontoya
+            UserSamples.CreateInigoMontoya()
         );
-        public static Gift Motorcycle => new Gift(
+        public static Gift CreateMotorcycle() => new Gift(
             "Harley Davidson",
             "That's more like it.",
             ".hd.",
-            UserSamples.LukeSkywalker
+            UserSamples.CreateLukeSkywalker()
         );
     }
 }

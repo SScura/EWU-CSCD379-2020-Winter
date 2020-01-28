@@ -18,7 +18,7 @@ namespace SecretSanta.Data.Tests
             int? userId1 = null;
             using (var applicationDbContext = new ApplicationDbContext(Options))
             {
-                var user = UserSamples.InigoMontoya;
+                var user = UserSamples.CreateInigoMontoya();
                 applicationDbContext.Users.Add(user);
 
                 await applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -43,10 +43,10 @@ namespace SecretSanta.Data.Tests
             int? userId2 = null;
             using (var applicationDbContext = new ApplicationDbContext(Options))
             {
-                var user = UserSamples.InigoMontoya;
+                var user = UserSamples.CreateInigoMontoya();
                 applicationDbContext.Users.Add(user);
 
-                var user2 = UserSamples.LukeSkywalker;
+                var user2 = UserSamples.CreateLukeSkywalker();
 
                 applicationDbContext.Users.Add(user2);
 
@@ -83,7 +83,7 @@ namespace SecretSanta.Data.Tests
             int? userId;
             using (var applicationDbContext = new ApplicationDbContext(Options, httpContextAccessor))
             {
-                var user = UserSamples.InigoMontoya;
+                var user = UserSamples.CreateInigoMontoya();
                 applicationDbContext.Users.Add(user);
 
                 await applicationDbContext.SaveChangesAsync();
@@ -110,11 +110,11 @@ namespace SecretSanta.Data.Tests
 
             using (var applicationDbContext = new ApplicationDbContext(Options, httpContextAccessor))
             {
-                var user = UserSamples.InigoMontoya;
+                var user = UserSamples.CreateInigoMontoya();
 
                 applicationDbContext.Users.Add(user);
 
-                var user2 = UserSamples.LukeSkywalker;
+                var user2 = UserSamples.CreateLukeSkywalker();
 
                 applicationDbContext.Users.Add(user2);
 
@@ -151,9 +151,9 @@ namespace SecretSanta.Data.Tests
 
             using (var dbContext = new ApplicationDbContext(Options, httpContextAccessor))
             {
-                var gift1 = GiftSamples.Motorcycle;
-                var gift2 = GiftSamples.Car;
-                var user = UserSamples.InigoMontoya;
+                var gift1 = GiftSamples.CreateMotorcycle();
+                var gift2 = GiftSamples.CreateCar();
+                var user = UserSamples.CreateInigoMontoya();
                 user.Gifts.Add(gift1);
                 user.Gifts.Add(gift2);
                 dbContext.Users.Add(user);
@@ -176,7 +176,7 @@ namespace SecretSanta.Data.Tests
             using (var dbContext = new ApplicationDbContext(Options, httpContextAccessor))
             {
                 var group = GroupSamples.Group1;
-                var user = UserSamples.InigoMontoya;
+                var user = UserSamples.CreateInigoMontoya();
                 user.UserGroups.Add(new UserGroup { User = user, Group = group });
                 dbContext.Users.Add(user);
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -197,7 +197,7 @@ namespace SecretSanta.Data.Tests
         {
             using (var dbContext = new ApplicationDbContext(Options))
             {
-                dbContext.Users.Add(UserSamples.InigoMontoya);
+                dbContext.Users.Add(UserSamples.CreateInigoMontoya());
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
             }
             using (var dbContext = new ApplicationDbContext(Options))
