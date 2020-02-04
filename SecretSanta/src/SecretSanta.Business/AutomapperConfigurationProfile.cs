@@ -8,7 +8,7 @@ namespace SecretSanta.Business
     {
         public AutomapperConfigurationProfile()
         {
-            CreateMap<Gift, Gift>().ForMember(property => property.Id, option => option.Ignore());
+            //CreateMap<Gift, Gift>().ForMember(property => property.Id, option => option.Ignore());
             CreateMap<User, User>().ForMember(property => property.Id, option => option.Ignore());
         }
 

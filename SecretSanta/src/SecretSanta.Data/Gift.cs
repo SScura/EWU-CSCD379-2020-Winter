@@ -4,6 +4,13 @@ namespace SecretSanta.Data
 {
     public class Gift : FingerPrintEntityBase
     {
+        public Gift(string title, string url, string description, int userId)
+        {
+            Title = title;
+            Url = url;
+            Description = description;
+            UserId = userId;
+        }
         public string Title { get => _Title; set => _Title = value ?? throw new ArgumentNullException(nameof(Title)); }
         private string _Title = string.Empty;
         public string Description { get => _Description; set => _Description = value ?? throw new ArgumentNullException(nameof(Description)); }
@@ -18,22 +25,5 @@ namespace SecretSanta.Data
         public Gift()
             : this("", "", "", 0)
         { }
-
-        public Gift(string title, string url, string description, User user) : this(title, url, description,
-            // Justification: There is no way to check for nullability with constructor chaining.
-#pragma warning disable CA1062 // Validate arguments of public methods          
-            user.Id)
-#pragma warning restore CA1062 // Validate arguments of public methods
-        {
-            User = user;
-        }
-
-        private Gift(string title, string url, string description, int userId)
-        {
-            Title = title;
-            Url = url;
-            Description = description;
-            UserId = userId;
-        }
     }
 }

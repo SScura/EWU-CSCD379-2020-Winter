@@ -10,4 +10,3 @@ namespace SecretSanta.Business.Services
         { }
     }
 }
-
