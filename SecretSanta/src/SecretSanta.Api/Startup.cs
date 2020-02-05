@@ -1,7 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SecretSanta.Business;
@@ -12,22 +12,30 @@ namespace SecretSanta.Api
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddDbContext<ApplicationDbContext>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IGiftService, GiftService>();
-            System.Type profileType = typeof(AutomapperConfigurationProfile);
-            System.Reflection.Assembly assembly = profileType.Assembly;
-            services.AddAutoMapper(new[] { assembly });
+        //public static void ConfigureServices(IServiceCollection services)
+        //{
+        //    SqliteConnection sqliteConnection = new SqliteConnection("DataSource=:memory:");
 
-            services.AddMvc(opts => opts.EnableEndpointRouting = false);
+        //    sqliteConnection.Open();
+        //    services.AddDbContext<ApplicationDbContext>(options =>
+        //    {
+        //        options.EnableSensitiveDataLogging()
+        //            .UseSqlite(sqliteConnection);
+        //    });
 
-            services.AddSwaggerDocument();
-        }
+        //    services.AddScoped<IUserService, UserService>();
+        //    services.AddScoped<IGiftService, GiftService>();
+        //    services.AddScoped<IGroupService, GroupService>();
+
+        //    System.Type profileType = typeof(AutomapperConfigurationProfile);
+        //    System.Reflection.Assembly assembly = profileType.Assembly;
+        //    services.AddAutoMapper(new[] { assembly });
+
+        //    services.AddMvc(opts => opts.EnableEndpointRouting = false);
+
+        //    services.AddSwaggerDocument();
+        //}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task", Justification = "<Pending>")]

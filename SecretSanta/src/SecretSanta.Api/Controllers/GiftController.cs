@@ -6,9 +6,9 @@ namespace SecretSanta.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : EntityController<User>
+    public class GiftController : EntityController<Gift>
     {
-        public UserController(IUserService entityService) : base(entityService)
+        public GiftController(IGiftService entityService) : base(entityService)
         {
         }
     }

@@ -21,7 +21,7 @@ namespace SecretSanta.Business.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            TEntity entity = await FetchByIdAsync(id);
+            TEntity? entity = await FetchByIdAsync(id);
             if (entity is { })
             {
                 DbContext.Remove(entity);
