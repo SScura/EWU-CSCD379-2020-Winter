@@ -4,12 +4,11 @@ namespace SecretSanta.Data
 {
     public class Gift : FingerPrintEntityBase
     {
-        public Gift(string title, string url, string description, int userId)
+        public Gift(string title, string description, string url)
         {
             Title = title;
             Url = url;
             Description = description;
-            UserId = userId;
         }
         public string Title { get => _Title; set => _Title = value ?? throw new ArgumentNullException(nameof(Title)); }
         private string _Title = string.Empty;
@@ -23,7 +22,7 @@ namespace SecretSanta.Data
         public int UserId { get; set; }
 
         public Gift()
-            : this("", "", "", 0)
+            : this("", "", "")
         { }
     }
 }
