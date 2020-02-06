@@ -1,4 +1,6 @@
 # Assignment
+[![Build Status](https://dev.azure.com/seanscura/CSCD379-2020%20Winter/_apis/build/status/SScura.EWU-CSCD379-2020-Winter?branchName=Assignment4)]
+(https://dev.azure.com/seanscura/CSCD379-2020%20Winter/_build/latest?definitionId=2&branchName=Assignment4)
 
 For this assignment you will be setting up the SecretSanta.Api project.
 
