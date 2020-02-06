@@ -15,26 +15,6 @@ namespace SecretSanta.Business.Tests
 
         protected abstract TEntity CreateEntity();
 
-        [TestMethod]
-        public async Task DeleteAsync_WithExistingItem_RemovesIt()
-        {
-            // Arrange
-            using var setupContext = new ApplicationDbContext(Options);
-            TEntity entity = CreateEntity();
-            setupContext.Set<TEntity>().Add(entity);
-            await setupContext.SaveChangesAsync();
-
-            using var dbContext = new ApplicationDbContext(Options);
-            IEntityService<TEntity> service = GetService(dbContext, Mapper);
-
-            // Act
-            //bool wasRemoved = await service.DeleteAsync(entity.Id);
-
-            // Assert
-            //Assert.IsTrue(wasRemoved);
-            using var assertContext = new ApplicationDbContext(Options);
-            Assert.IsNull(assertContext.Set<TEntity>().Find(entity.Id));
-        }
 
         [TestMethod]
         public async Task DeleteAsync_NoExistingItem_RemovesIt()

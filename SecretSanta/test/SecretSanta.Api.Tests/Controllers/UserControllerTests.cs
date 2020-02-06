@@ -1,6 +1,6 @@
-﻿using BlogEngine.Api.Controllers;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SecretSanta.Api.Controllers;
 using SecretSanta.Business;
 using SecretSanta.Data;
 using System;
@@ -20,27 +20,13 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void Create_WithoutService_Success()
         {
             _ = new UserController(null!);
         }
 
-        [TestMethod]
-        public async Task GetById_WithExistingUser_Success()
-        {
-            var service = new UserService();
-            var user = UserSamples.CreateInigoMontoya();
-
-            await service.InsertAsync(user);
-
-            var controller = new UserController(service);
-
-            ActionResult<User> returnValue = await controller.Get(user.Id!.Value);
-
-            Assert.IsTrue(returnValue.Result is OkObjectResult);
-        }
-
-        public class UserService : IUserService
+        private class UserService : IUserService
         {
             private Dictionary<int, User> Items { get; } = new Dictionary<int, User>();
             public Task<bool> DeleteAsync(int id)
@@ -55,7 +41,13 @@ namespace SecretSanta.Api.Tests.Controllers
 
             public Task<User> FetchByIdAsync(int id)
             {
-                throw new NotImplementedException();
+                if (Items.TryGetValue(id, out User? user))
+                {
+                    Task<User> t1 = Task.FromResult(user);
+                    return t1;
+                }
+                Task<User> t2 = Task.FromResult<User>(null!);
+                return t2;
             }
 
             public Task<User> InsertAsync(User entity)

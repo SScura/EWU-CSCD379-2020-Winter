@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+
 namespace SecretSanta.Business
 {
     public interface IEntityService<TEntity> where TEntity : class

@@ -9,52 +9,6 @@ namespace SecretSanta.Business.Tests
     [TestClass]
     public class GiftServiceTests : TestBase
     {
-        [TestMethod]
-        public async Task CreateGift_ShouldSaveIntoDatabase()
-        {
-            // Arrange
-            using var dbContext = new ApplicationDbContext(Options);
-
-            IGiftService service = new GiftService(dbContext, Mapper);
-
-            User user = UserSamples.CreateInigoMontoya();
-
-            Gift gift = GiftSamples.CreateMotorcycle();
-
-            await service.InsertAsync(gift);
-
-            // Act
-
-            // Assert
-            Assert.IsNotNull(gift.Id);
-            Assert.IsNotNull(user.Id);
-            Assert.AreSame(gift.User, user);
-            Assert.AreEqual(user.Id, gift.User.Id);
-        }
-
-        [TestMethod]
-        public async Task FetchByIdGift_ShouldIncludeUser()
-        {
-            // Arrange
-            using var dbContext = new ApplicationDbContext(Options);
-
-            IGiftService service = new GiftService(dbContext, Mapper);
-
-            User user = UserSamples.CreateInigoMontoya();
-
-            Gift gift = GiftSamples.CreateMotorcycle();
-
-            await service.InsertAsync(gift);
-
-            // Act
-
-            // Assert
-            using var dbContext2 = new ApplicationDbContext(Options);
-            service = new GiftService(dbContext, Mapper);
-            gift = await service.FetchByIdAsync(gift.Id!.Value);
-
-            Assert.IsNotNull(gift.User);
-        }
 
         [TestMethod]
         public async Task UpdateUser_ShouldSaveIntoDatabase()
