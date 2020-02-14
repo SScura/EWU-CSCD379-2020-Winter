@@ -1,120 +1,90 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.EntityFrameworkCore;
 using SecretSanta.Data;
-using System;
-using SecretSanta.Data.Tests;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using SecretSanta.Data.SampleData;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
-    public class UserControllerTests : BaseControllerTests
+    public class GroupControllerTests : BaseControllerTests
     {
         [TestMethod]
-        public async Task Get_ReturnsUsers()
+        public async Task Get_ReturnsGroups()
         {
-            //Arrange
             using ApplicationDbContext context = Factory.GetDbContext();
-            User user = UserSamples;
-            context.Users.Add(user);
+            Group group = GroupSamples.CreateEmployeeGroup();
+            context.Groups.Add(group);
             context.SaveChanges();
-    }
-    //Act
-    //Justification: URL is type string, not type URI in this project
-#pragma warning disable CA2234 // Pass system uri objects instead of strings
-    HttpResponseMessage response = await Client.GetAsync("api/User");
-#pragma warning restore CA2234 // Pass system uri objects instead of strings
+            HttpResponseMessage response = await Client.GetAsync("api/Group");
 
-    public class UserInMemoryService : InMemoryEntityService<User>, IUserService
-    {
-        //Assert
-        response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
             string jsonData = await response.Content.ReadAsStringAsync();
 
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-        };
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            };
 
-        Business.Dto.User[] users = JsonSerializer.Deserialize<Business.Dto.User[]>(jsonData, options);
+            Business.Dto.Group[] groups = JsonSerializer.Deserialize<Business.Dto.Group[]>(jsonData, options);
 
-        Assert.AreEqual(user.Id, users[0].Id);
-            Assert.AreEqual(user.FirstName, users[0].FirstName);
-            Assert.AreEqual(user.LastName, users[0].LastName);
+            Assert.AreEqual(group.Id, groups[0].Id);
+            Assert.AreEqual(group.Title, groups[0].Title);
         }
 
-    [TestMethod]
-    public async Task Put_WithMissingId_NotFound()
-    {
-        //Arrange
-        Business.Dto.UserInput user = Mapper.Map<User, Business.Dto.UserInput>(SampleData.CreateJonDoe());
-        string jsonData = JsonSerializer.Serialize(user);
+        [TestMethod]
+        public async Task Put_WithMissingId_NotFound()
+        {
+            Business.Dto.GroupInput group = Mapper.Map<Group, Business.Dto.GroupInput>(GroupSamples.CreateEmployeeGroup());
+            string jsonData = JsonSerializer.Serialize(group);
 
-        using StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+            using StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-        //Act
-        //Justification: URL is type string, not type URI in this project
-#pragma warning disable CA2234 // Pass system uri objects instead of strings
-        HttpResponseMessage response = await Client.PutAsync("api/User/42", stringContent);
-#pragma warning restore CA2234 // Pass system uri objects instead of strings
+            HttpResponseMessage response = await Client.PutAsync("api/Group/42", stringContent);
 
-        //Assert
-        Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-    }
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+        }
 
-    [TestMethod]
-    public async Task Delete_WithValidId_Success()
-    {
-        // Arrange
-        using ApplicationDbContext context = Factory.GetDbContext();
-        User userEntity1 = SampleData.CreateJonDoe();
-        User userEntity2 = SampleData.CreateBrandonFields();
-        User userEntity3 = SampleData.CreateRiverWillis();
+        [TestMethod]
+        public async Task Delete_WithValidId_Success()
+        {
+            using ApplicationDbContext context = Factory.GetDbContext();
+            Group groupEntity1 = GroupSamples.CreateEmployeeGroup();
+            Group groupEntity2 = GroupSamples.CreateNonEmployeeGroup();
 
-        context.Users.Add(userEntity1);
-        context.Users.Add(userEntity2);
-        context.Users.Add(userEntity3);
+            context.Groups.Add(groupEntity1);
+            context.Groups.Add(groupEntity2);
 
-        context.SaveChanges();
+            context.SaveChanges();
 
-        //Act
-        //Justification: URL is type string, not type URI in this project
-#pragma warning disable CA2234 // Pass system uri objects instead of strings
-        HttpResponseMessage response = await Client.DeleteAsync($"api/User/{userEntity1.Id}");
-#pragma warning restore CA2234 // Pass system uri objects instead of strings
+            HttpResponseMessage response = await Client.DeleteAsync($"api/Group/{groupEntity1.Id}");
 
-        //Assert
-        response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
 
-        using ApplicationDbContext contextAct = Factory.GetDbContext();
+            using ApplicationDbContext contextAct = Factory.GetDbContext();
 
-        List<Data.User> usersAfter = await context.Users.ToListAsync();
+            List<Group> groupsAfter = await context.Groups.ToListAsync();
 
-        Assert.AreEqual(2, usersAfter.Count);
-    }
+            Assert.AreEqual(1, groupsAfter.Count);
+        }
 
-    [TestMethod]
-    public async Task Delete_WithInvalidId_NotFound()
-    {
-        // Arrange
-        using ApplicationDbContext context = Factory.GetDbContext();
-        User userEntity = SampleData.CreateJonDoe();
+        [TestMethod]
+        public async Task Delete_WithInvalidId_NotFound()
+        {
+            using ApplicationDbContext context = Factory.GetDbContext();
+            Group groupEntity = GroupSamples.CreateEmployeeGroup();
 
-        context.Users.Add(userEntity);
-        context.SaveChanges();
+            context.Groups.Add(groupEntity);
+            context.SaveChanges();
 
-        //Act
-        //Justification: URL is type string, not type URI in this project
-#pragma warning disable CA2234 // Pass system uri objects instead of strings
-        HttpResponseMessage response = await Client.DeleteAsync($"api/User/{42}");
-#pragma warning restore CA2234 // Pass system uri objects instead of strings
+            HttpResponseMessage response = await Client.DeleteAsync($"api/Group/{42}");
 
-        //Assert
-        Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+        }
     }
 }

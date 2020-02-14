@@ -23,13 +23,7 @@ namespace SecretSanta.Api.Tests.Controllers
             context.Gifts.Add(gift);
             context.SaveChanges();
 
-            //Act
-            //Justification: URL is type string, not type URI in this project
-#pragma warning disable CA2234 // Pass system uri objects instead of strings
             HttpResponseMessage response = await Client.GetAsync("api/Gift");
-#pragma warning restore CA2234 // Pass system uri objects instead of strings
-
-            //Assert
             response.EnsureSuccessStatusCode();
             string jsonData = await response.Content.ReadAsStringAsync();
 
@@ -50,26 +44,19 @@ namespace SecretSanta.Api.Tests.Controllers
         [TestMethod]
         public async Task Put_WithMissingId_NotFound()
         {
-            //Arrange
             Business.Dto.GiftInput gift = Mapper.Map<Gift, Business.Dto.GiftInput>(GiftSamples.CreateMotorcycle());
             string jsonData = JsonSerializer.Serialize(gift);
 
             using StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-            //Act
-            //Justification: URL is type string, not type URI in this project
-#pragma warning disable CA2234 // Pass system uri objects instead of strings
             HttpResponseMessage response = await Client.PutAsync("api/Gift/42", stringContent);
-#pragma warning restore CA2234 // Pass system uri objects instead of strings
 
-            //Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [TestMethod]
         public async Task Put_WithId_UpdatesGift()
         {
-            // Arrange
             using ApplicationDbContext context = Factory.GetDbContext();
             Gift giftEntity = GiftSamples.CreateCar();
 
@@ -85,14 +72,9 @@ namespace SecretSanta.Api.Tests.Controllers
 
             using StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-            // Act
-            //Justification: URL is type string, not type URI in this project
-#pragma warning disable CA2234 // Pass system uri objects instead of strings
             HttpResponseMessage response = await Client.PutAsync($"api/Gift/{giftEntity.Id}", stringContent);
-#pragma warning restore CA2234 // Pass system uri objects instead of strings
-
-            // Assert
             response.EnsureSuccessStatusCode();
+
             string retunedJson = await response.Content.ReadAsStringAsync();
 
             var options = new JsonSerializerOptions
@@ -122,13 +104,8 @@ namespace SecretSanta.Api.Tests.Controllers
 
             context.SaveChanges();
 
-            //Act
-            //Justification: URL is type string, not type URI in this project
-#pragma warning disable CA2234 // Pass system uri objects instead of strings
             HttpResponseMessage response = await Client.DeleteAsync($"api/Gift/{giftEntity1.Id}");
-#pragma warning restore CA2234 // Pass system uri objects instead of strings
 
-            //Assert
             response.EnsureSuccessStatusCode();
 
             using ApplicationDbContext contextAct = Factory.GetDbContext();
@@ -141,20 +118,14 @@ namespace SecretSanta.Api.Tests.Controllers
         [TestMethod]
         public async Task Delete_WithInvalidId_NotFound()
         {
-            // Arrange
             using ApplicationDbContext context = Factory.GetDbContext();
             Gift giftEntity = GiftSamples.CreateMotorcycle();
 
             context.Gifts.Add(giftEntity);
             context.SaveChanges();
 
-            //Act
-            //Justification: URL is type string, not type URI in this project
-#pragma warning disable CA2234 // Pass system uri objects instead of strings
             HttpResponseMessage response = await Client.DeleteAsync($"api/Gift/{42}");
-#pragma warning restore CA2234 // Pass system uri objects instead of strings
 
-            //Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -163,10 +134,8 @@ namespace SecretSanta.Api.Tests.Controllers
         [DataRow(nameof(Business.Dto.GiftInput.UserId))]
         public async Task Post_WithOutRequiredProperties_BadRequest(string propertyName)
         {
-            // Arrange
             Gift entity = GiftSamples.CreateCar();
 
-            //DTO
             Business.Dto.GiftInput gift = Mapper.Map<Gift, Business.Dto.Gift>(entity);
             System.Type inputType = typeof(Business.Dto.GiftInput);
             System.Reflection.PropertyInfo? propInfo = inputType.GetProperty(propertyName);
@@ -176,13 +145,8 @@ namespace SecretSanta.Api.Tests.Controllers
 
             using StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-            // Act
-            //Justification: URL is type string, not type URI in this project
-#pragma warning disable CA2234 // Pass system uri objects instead of strings
             HttpResponseMessage response = await Client.PostAsync($"api/Gift", stringContent);
-#pragma warning restore CA2234 // Pass system uri objects instead of strings
 
-            // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
     }

@@ -9,7 +9,6 @@ namespace SecretSanta.Api.Tests.Controllers
     [TestClass]
     public class BaseControllerTests
     {
-        //Initialized in the test initialization
 #nullable disable
         protected SecretSantaWebApplicationFactory Factory { get; set; }
         protected HttpClient Client { get; set; }

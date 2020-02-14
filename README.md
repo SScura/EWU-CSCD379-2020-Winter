@@ -1,5 +1,5 @@
 # Assignment
-
+[![Build Status](https://dev.azure.com/seanscura/CSCD379-2020%20Winter/_apis/build/status/SScura.EWU-CSCD379-2020-Winter?branchName=Assignment5)](https://dev.azure.com/seanscura/CSCD379-2020%20Winter/_build/latest?definitionId=2&branchName=Assignment5)
 For this assignment you will be completing the SecretSanta.Api project and startng work on the SecretSanta.Web project
 
 - Create DTOs for all entities

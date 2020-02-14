@@ -1,6 +1,6 @@
 ﻿namespace SecretSanta.Data.SampleData
 {
-    class UserSamples
+    public static class UserSamples
     {
         public const string Inigo = "Inigo";
         public const string Montoya = "Montoya";
