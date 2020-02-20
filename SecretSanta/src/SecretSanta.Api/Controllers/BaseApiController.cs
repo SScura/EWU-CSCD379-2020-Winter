@@ -39,7 +39,7 @@ namespace SecretSanta.Api.Controllers
             return Ok(entity);
         }
 
-        // PUT: api/Author/5
+        // PUT: api/User/5
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

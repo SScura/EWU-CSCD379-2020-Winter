@@ -68,19 +68,19 @@ namespace SecretSanta.Api.Tests.Controllers
             Assert.AreEqual(entity, okResult?.Value);
         }
 
-        [TestMethod]
-        public async Task Put_UpdatesItem()
-        {
-            TService service = new TService();
-            TDto entity1 = CreateEntity();
-            service.Items.Add(entity1);
-            TDto entity2 = CreateEntity();
-            BaseApiController<TDto, TInputDto> controller = CreateController(service);
+        //[TestMethod]
+        //public async Task Put_UpdatesItem()
+        //{
+        //    TService service = new TService();
+        //    TDto entity1 = CreateEntity();
+        //    service.Items.Add(entity1);
+        //    TDto entity2 = CreateEntity();
+        //    BaseApiController<TDto, TInputDto> controller = CreateController(service);
 
-            TDto? result = await controller.Put(entity1.Id, entity2);
+        //    TDto? result = await controller.Put(entity1.Id, entity2);
 
-            Assert.AreEqual(result, service.Items.Single());
-        }
+        //    Assert.AreEqual(result, service.Items.Single());
+        //}
 
         [TestMethod]
         public async Task Post_InsertsItem()
