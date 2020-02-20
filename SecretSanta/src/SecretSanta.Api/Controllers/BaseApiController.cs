@@ -1,18 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using SecretSanta.Business.Services;
-using SecretSanta.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SecretSanta.Business.Services;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SecretSanta.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public abstract class BaseApiController<TDto, TInputDto> : ControllerBase
-        where TDto : class, TInputDto
-        where TInputDto : class
+    where TDto : class, TInputDto
+    where TInputDto : class
     {
         protected IEntityService<TDto, TInputDto> Service { get; }
 
@@ -38,10 +39,18 @@ namespace SecretSanta.Api.Controllers
             return Ok(entity);
         }
 
+        // PUT: api/Author/5
         [HttpPut("{id}")]
-        public async Task<TDto?> Put(int id, TInputDto value)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<TDto?>> Put(int id, TInputDto value)
         {
-            return await Service.UpdateAsync(id, value);
+            if (await Service.UpdateAsync(id, value) is TDto dto)
+            {
+                return dto;
+            }
+            return NotFound();
         }
 
         [HttpPost]
